@@ -59,4 +59,8 @@ impl<'a> Pencil<'a> {
             self.window.screen[pos.y as usize][i as usize] = text.as_bytes()[i as usize - pos.x as usize] as char;
         }
     }
+
+    pub fn draw_item(&mut self, ch: char, pos: Vector2D) {
+        self.window.screen[pos.y as usize][pos.x as usize] = ch;
+    }
 }

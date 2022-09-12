@@ -27,7 +27,7 @@ impl Engine {
             self.window.cursor_origin();
             app(&mut self.game, &mut self.state, &mut self.window);
             self.window.draw_screen();
-            thread::sleep(Duration::from_millis(33));
+            thread::sleep(Duration::from_millis(1_000 / 120));
         }
         execute!(stdout(), DisableMouseCapture).unwrap();
         disable_raw_mode().unwrap();
