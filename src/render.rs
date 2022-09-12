@@ -2,9 +2,11 @@ use std::io::{stdout, Write};
 
 use crossterm::terminal::size;
 
+use crate::spacial::Vector2D;
+
 pub struct Window {
     size: (u16, u16),
-    screen: Vec<Vec<char>>,
+    screen: Vec<Vec<char>>
 }
 
 impl Window {
@@ -39,5 +41,22 @@ impl Window {
         }
         // print!("{screen}");
         stdout().flush().unwrap();
+    }
+}
+
+
+pub struct Pencil<'a> {
+    window: &'a mut Window
+}
+
+impl<'a> Pencil<'a> {
+    pub fn new(window: &'a mut Window) -> Self {
+        Pencil { window }
+    }
+
+    pub fn draw_text(&mut self, text: &str, pos: Vector2D) {
+        for i in pos.x..(pos.x + text.len() as i32) {
+            self.window.screen[pos.y as usize][i as usize] = text.as_bytes()[i as usize - pos.x as usize] as char;
+        }
     }
 }

@@ -6,6 +6,7 @@ use render::Window;
 
 pub mod input;
 pub mod render;
+pub mod spacial;
 
 pub struct Engine {
     pub fps: u8,
