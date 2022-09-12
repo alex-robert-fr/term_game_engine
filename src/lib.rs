@@ -1,10 +1,8 @@
 use std::{thread, time::Duration, io::stdout};
 
 use crossterm::{terminal::{enable_raw_mode, disable_raw_mode}, execute, event::{EnableMouseCapture, DisableMouseCapture}};
-use input::Keyboard;
 use render::Window;
 
-pub mod input;
 pub mod render;
 pub mod spacial;
 
@@ -39,12 +37,11 @@ pub struct Game {
 }
 
 pub struct State {
-    pub keyboard: Keyboard,
     pub exit: bool
 }
 
 impl State {
     pub fn new() -> Self {
-        State { exit: false, keyboard: Keyboard {  } }
+        State { exit: false}
     }
 }
