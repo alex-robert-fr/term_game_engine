@@ -9,9 +9,15 @@ pub struct Keyboard {}
 impl Keyboard {
     pub fn get_last_key_press(&self) -> Option<Key> {
         match poll(Duration::from_millis(0)) {
-            Ok(_) => match read().unwrap() {
-                Event::Key(event) => Some(self.translate_key(event)),
-                _ => None,
+            Ok(val) => {
+                if val {
+                    match read().unwrap() {
+                        Event::Key(event) => Some(self.translate_key(event)),
+                        _ => None,
+                    }
+                } else {
+                    Some(Key::Unknown)
+                }
             },
             Err(_) => None,
         }
