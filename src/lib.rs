@@ -23,8 +23,9 @@ impl Engine {
         enable_raw_mode().unwrap();
         while !self.state.exit {
             self.window.clear();
-            self.window.cursor_move_home();
+            self.window.cursor_origin();
             app(&mut self.game, &mut self.state, &mut self.window);
+            self.window.draw_screen();
             thread::sleep(Duration::from_millis(33));
         }
         disable_raw_mode().unwrap();
