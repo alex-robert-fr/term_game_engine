@@ -1,6 +1,6 @@
-use std::{thread, time::Duration};
+use std::{thread, time::Duration, io::stdout};
 
-use crossterm::terminal::{enable_raw_mode, disable_raw_mode};
+use crossterm::{terminal::{enable_raw_mode, disable_raw_mode}, execute, event::{EnableMouseCapture, DisableMouseCapture}};
 use input::Keyboard;
 use render::Window;
 
@@ -21,13 +21,14 @@ impl Engine {
 
     pub fn run<G>(&mut self, mut app: G) where G: FnMut(&mut Game, &mut State, &mut Window) {
         enable_raw_mode().unwrap();
+        execute!(stdout(), EnableMouseCapture).unwrap();
         while !self.state.exit {
-            self.window.clear();
             self.window.cursor_origin();
             app(&mut self.game, &mut self.state, &mut self.window);
             self.window.draw_screen();
             thread::sleep(Duration::from_millis(33));
         }
+        execute!(stdout(), DisableMouseCapture).unwrap();
         disable_raw_mode().unwrap();
     }
 }

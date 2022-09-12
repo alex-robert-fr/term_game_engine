@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use crossterm::event::{
-    poll, read, Event, KeyCode, KeyEvent, KeyEventKind, KeyEventState, KeyModifiers,
+    poll, read, Event, KeyCode, KeyEvent, KeyEventKind, KeyEventState, KeyModifiers, MouseEvent,
 };
 
 pub struct Keyboard {}
@@ -17,6 +17,22 @@ impl Keyboard {
                     }
                 } else {
                     Some(Key::Unknown)
+                }
+            },
+            Err(_) => None,
+        }
+    }
+
+    pub fn get_last_mouse(&self) -> Option<MouseEvent> {
+        match poll(Duration::from_millis(0)) {
+            Ok(val) => {
+                if val {
+                    match read().unwrap() {
+                        Event::Mouse(event) => Some(event),
+                        _ => None,
+                    }
+                } else {
+                    None
                 }
             },
             Err(_) => None,

@@ -14,7 +14,7 @@ impl Window {
         for _ in 0..size.1 {
             let mut x_line = Vec::new();
             for _ in 0..size.0 {
-                x_line.push('#');
+                x_line.push(' ');
             }
             screen.push(x_line);
         }
@@ -23,11 +23,6 @@ impl Window {
             size,
             screen,
         }
-    }
-
-    pub fn clear(&self) {
-        print!("\x1b[2J");
-        stdout().flush().unwrap();
     }
 
     pub fn cursor_origin(&self) {
