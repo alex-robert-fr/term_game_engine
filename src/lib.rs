@@ -1,6 +1,10 @@
-use std::{thread, time::Duration, io::stdout};
+use std::{io::stdout, thread, time::Duration};
 
-use crossterm::{terminal::{enable_raw_mode, disable_raw_mode}, execute, event::{EnableMouseCapture, DisableMouseCapture}};
+use crossterm::{
+    event::{DisableMouseCapture, EnableMouseCapture},
+    execute,
+    terminal::{disable_raw_mode, enable_raw_mode}, cursor,
+};
 use render::Window;
 
 pub mod render;
@@ -8,40 +12,44 @@ pub mod spacial;
 
 pub struct Engine {
     pub fps: u8,
-    pub game: Game,
     pub state: State,
-    pub window: Window
+    pub window: Window,
 }
 
 impl Engine {
     pub fn new(fps: u8) -> Self {
-        Engine { fps, game: Game {  }, state: State::new(), window: Window::new() }
+        Engine {
+            fps,
+            state: State::new(),
+            window: Window::new(),
+        }
     }
 
-    pub fn run<G>(&mut self, mut app: G) where G: FnMut(&mut Game, &mut State, &mut Window) {
+    pub fn run<G>(&mut self, mut app: G)
+    where
+        G: FnMut(&mut State, &mut Window),
+    {
         enable_raw_mode().unwrap();
         execute!(stdout(), EnableMouseCapture).unwrap();
+        execute!(stdout(), cursor::Hide).unwrap();
+
         while !self.state.exit {
             self.window.cursor_origin();
-            app(&mut self.game, &mut self.state, &mut self.window);
+            app(&mut self.state, &mut self.window);
             self.window.draw_screen();
-            thread::sleep(Duration::from_millis(1_000 / 120));
+            thread::sleep(Duration::from_millis(1_000 / 80));
         }
         execute!(stdout(), DisableMouseCapture).unwrap();
         disable_raw_mode().unwrap();
     }
 }
 
-pub struct Game {
-    
-}
-
 pub struct State {
-    pub exit: bool
+    pub exit: bool,
 }
 
 impl State {
     pub fn new() -> Self {
-        State { exit: false}
+        State { exit: false }
     }
 }
